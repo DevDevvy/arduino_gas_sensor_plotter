@@ -23,7 +23,7 @@ csv_writer.writerow(["Time", "MQ8", "MQ4", "MQ9", "MQ7", "MQ135"])
 
 # Initialize time for downsampling and live plotting
 start_time = time.time()
-plot_interval = 10  # Update plot every 6 seconds
+plot_interval = 2  # Update plot every 6 seconds
 plot_data = defaultdict(list)
 
 # Function to read serial data
@@ -44,7 +44,6 @@ def write_csv():
         avg_values = [sum(sensor_data[sensor]) / len(sensor_data[sensor]) for sensor in sensor_data.keys()]
         csv_writer.writerow([start_time, *avg_values])
         csv_file.flush()
-        sensor_data.clear()
 
 # Start threads for reading serial data and writing to CSV
 serial_thread = Thread(target=read_serial)
@@ -67,8 +66,13 @@ try:
             plt.ylabel('Sensor Value')
             plt.legend()
             plt.pause(0.05)
+            start_time = time_now
+
+        # Check if 24 hours have passed and clear plot_data
+        if time_now - start_time >= 24*3600:
             plot_data.clear()
             start_time = time_now
+
 except KeyboardInterrupt:
     ser.close()
     csv_file.close()
