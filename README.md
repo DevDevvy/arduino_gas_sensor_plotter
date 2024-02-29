@@ -10,7 +10,7 @@ To use this project, follow these steps:
 
 1. **Arduino Setup:**
 
-   - Obtain the Arduino code for interfacing with the gas sensors.
+   - Obtain the [Arduino code](https://github.com/DevDevvy/arduino_gas_sensor_code) for interfacing with the gas sensors.
    - Load the Arduino code into the Arduino board.
    - Set up the gas sensors with the Arduino board.
 
