@@ -1,3 +1,8 @@
+# Description: This script reads sensor data from the Arduino and writes it to a CSV file.
+# It also plots the data live using matplotlib. The script uses threads to read serial data
+# and write to CSV in the background, while the main thread plots the data live. The script 
+# also clears the plot data every 24 hours to keep the live chart from getting too large.
+
 import serial
 import csv
 import matplotlib.pyplot as plt
@@ -21,10 +26,13 @@ csv_file = open(csv_filename, 'w', newline='')
 csv_writer = csv.writer(csv_file)
 csv_writer.writerow(["Time", "MQ8", "MQ4", "MQ9", "MQ7", "MQ135"])
 
-# Initialize time for downsampling and live plotting
+# Initialize time for downsampling and live plotting - 
 start_time = time.time()
-plot_interval = 2  # Update plot every 6 seconds
+plot_interval = 2  # Update plot every 2 seconds
 plot_data = defaultdict(list)
+
+# Plots data for live charting every 2 seconds, 
+# but writes data to CSV every 60 seconds to save space
 
 # Function to read serial data
 def read_serial():
@@ -46,6 +54,10 @@ def write_csv():
         csv_file.flush()
 
 # Start threads for reading serial data and writing to CSV
+# Avoids blocking the main thread, allowing for live plotting
+# The main thread plots the data live, and clears the plot_data
+# every 24 hours, to keep the live chart from getting too large
+# The serial and CSV threads will run in the background
 serial_thread = Thread(target=read_serial)
 csv_thread = Thread(target=write_csv)
 serial_thread.daemon = True  # Daemonize threads so they exit when the main program exits
