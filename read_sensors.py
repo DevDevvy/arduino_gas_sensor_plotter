@@ -6,7 +6,6 @@
 import serial
 import csv
 import matplotlib.pyplot as plt
-import pandas as pd
 from collections import defaultdict
 import time
 from threading import Thread
